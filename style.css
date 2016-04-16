@@ -1,0 +1,40 @@
+.hide {
+    display : none;
+}
+.show {
+    display: block;
+}
+.ui {
+    width: 50%;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+#hovered {
+    width: 50%;
+    margin: 0 auto;
+    height: 20px;
+    text-align: center;
+}
+#filter {
+    width: 80%;
+    margin: 0 auto;
+    margin-top:5%;
+}
+#axis {
+    width: 80%;
+    margin: 0 auto;
+}
+.domain {
+  fill: none;
+  stroke: #000;
+}
+.plot {
+    width: 50%;
+    margin: 0 auto;
+}
+.tick {
+        font-size : 12;
+}
+.tick line {
+    stroke : #ccc;
+}
