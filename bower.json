@@ -1,7 +1,7 @@
 {
   "name": "yes",
   "homepage": "https://github.com/abhipil/ds1004_d3",
-  "description": "Lab9",
+  "description": "DS1004 Spring'16 Lab9",
   "main": "index.html",
   "license": "MIT",
   "ignore": [
