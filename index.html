@@ -86,6 +86,7 @@
     
     var update = $("#update");
     update.on("click",function() {
+        d3.select("#hovered").text("");
         console.log(csvData.length);
         filteredData = filter(csvData,$("#mpg-min").val(),$("#mpg-max").val());
         if(filteredData.length == 0) {
@@ -93,7 +94,7 @@
             $("#plot").hide();
         }
         render(filteredData,$("#sel-x option:selected").text(),$("#sel-y option:selected").text());
-});
+    });
 
     var xSelection = $("#sel-x"); 
    
@@ -102,6 +103,7 @@
     
     
     xSelection.on('change',function() {
+        d3.select("#hovered").text("");
         val = $("#sel-x option:selected").text(); 
         xVal = val;
         $("#sel-y").children().show();
@@ -119,6 +121,7 @@
     });
     
     ySelection.on('change',function() {
+        d3.select("#hovered").text("");
         val = $("#sel-y option:selected").text(); 
         yVal = val;
         $("#sel-x").children().show();
