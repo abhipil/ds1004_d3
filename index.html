@@ -75,8 +75,12 @@
     update.on("click",function() {
         console.log(csvData.length);
         filteredData = filter(csvData,$("#mpg-min").val(),$("#mpg-max").val());
+        if(filteredData.length == 0) {
+            d3.select("#hovered").text("No data!!(Modify the range)");
+            $("#plot").hide();
+        }
         render(filteredData,$("#sel-x option:selected").text(),$("#sel-y option:selected").text());
-        console.log(filteredData.length);
+        //console.log(filteredData.length);
 
     });
 
@@ -91,10 +95,11 @@
         xVal = val;
         $("#sel-y").children().show();
         $("#sel-y option[value='"+val+"']").hide();
-        update.text("Query "+val.toUpperCase());
-        console.log(csvData.length);
+        //update.text("Query "+val.toUpperCase());
+        //console.log(csvData.length);
         filteredData = filter(csvData,$("#mpg-min").val(),$("#mpg-max").val());
         if(filteredData.length == 0) {
+            //$("hovered").show();
             d3.select("#hovered").text("No data!!(Modify the range)");
             $("#plot").hide();
         }
@@ -109,8 +114,13 @@
         $("#sel-x option[value='"+val+"']").hide();
         console.log(csvData.length);
         filteredData = filter(csvData,$("#mpg-min").val(),$("#mpg-max").val());
+        if(filteredData.length == 0) {
+            //$("hovered").show();
+            d3.select("#hovered").text("No data!!(Modify the range)");
+            $("#plot").hide();
+        }
         render(filteredData,$("#sel-x option:selected").text(),$("#sel-y option:selected").text());
-        console.log(filteredData.length);
+        //console.log(filteredData.length);
 
     });
        
@@ -235,7 +245,7 @@
         });
     function filter(data,min,max) {
         console.log(data.length+" "+min+" "+max);
-        var x = $("#sel-x option:selected").text();
+        var x = "mpg";
         var filteredData = data.filter(function(d) {
                 console.log(d[x]);
                 return +d[x] >= min && +d[x] <= max ;
