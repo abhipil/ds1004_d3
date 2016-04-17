@@ -1,137 +1,52 @@
-<html>
-<head>
-    <title>DS1004 Lab9 - Cars</title>
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/d3/d3.min.js"></script>
-    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
-    <style type="text/css">
-.hide {
-    display : none;
-}
-.show {
-    display: block;
-}
-.ui {
-    width: 50%;
-    margin: 0 auto;
-    margin-top: 30px;
-}
-#hovered {
-    width: 50%;
-    margin: 0 auto;
-    height: 20px;
-    text-align: center;
-}
-#filter {
-    width: 80%;
-    margin: 0 auto;
-    margin-top:5%;
-}
-#axis {
-    width: 80%;
-    margin: 0 auto;
-}
-.domain {
-  fill: none;
-  stroke: #000;
-}
-.plot {
-    width: 50%;
-    margin: 0 auto;
-}
-.tick {
-        font-size : 12;
-}
-.tick line {
-    stroke : #ccc;
-}
+var data = [];
+var csvData = [];
+var xVal ;
+var yVal ;
+var width = 450;
+var height = 450;
+var margin = { top:30,right:20,bottom:50,left:50};
+var innerwidth = width - margin.left - margin.right;
+var innerheight = height - margin.top-margin.bottom;
+var categories =[];
+var canvas = d3.select(".plot")
+                .append("svg")
+                .attr("width",width)
+                .attr("height",height);
 
-    </style>
-</head>
-<body>
-    <h4 id="hovered"></h4>
-    <div class="plot">
-    </div>
-    <div class="ui">
-      <div id="axis">
-        <label>X-Axis</label>
-        <select id="sel-x"></select>
-        <label>Y-Axis</label>
-        <select id="sel-y"></select>
-      </div>
-      <div id="filter">
-        <input id="mpg-min" type="text" value="0" size="10">
-        <input id="mpg-max" type="text" 
-            value="30" size="10" style="margin-left:1%;">
-        <button id="update">Query MPG</button>
-      </div>
-    </div>
-</body>
-<script type="text/javascript">
-    var data = [];
-    var csvData = [];
-    var xVal ;
-    var yVal ;
-    var width = 450;
-    var height = 450;
-    var margin = { top:30,right:20,bottom:50,left:50};
-    var innerwidth = width - margin.left - margin.right;
-    var innerheight = height - margin.top-margin.bottom;
-    var categories =[];
-    var canvas = d3.select(".plot")
-                    .append("svg")
-                    .attr("width",width)
-                    .attr("height",height);
-    
-    var update = $("#update");
-    update.on("click",function() {
-        console.log(csvData.length);
-        filteredData = filter(csvData,$("#mpg-min").val(),$("#mpg-max").val());
-        if(filteredData.length == 0) {
-            d3.select("#hovered").text("No data!!(Modify the range)");
-            $("#plot").hide();
-        }
-        render(filteredData,$("#sel-x option:selected").text(),$("#sel-y option:selected").text());
+var update = $("#update");
+update.on("click",function() {
+    filteredData = filter(csvData,$("#mpg-min").val(),$("#mpg-max").val());
+    render(filteredData,$("#sel-x option:selected").text(),$("#sel-y option:selected").text());
 });
 
-    var xSelection = $("#sel-x"); 
-   
-    
-    var ySelection = $("#sel-y");
-    
-    
-    xSelection.on('change',function() {
-        val = $("#sel-x option:selected").text(); 
-        xVal = val;
-        $("#sel-y").children().show();
-        $("#sel-y option[value='"+val+"']").hide();
-        //update.text("Query "+val.toUpperCase());
-        //console.log(csvData.length);
-        filteredData = filter(csvData,$("#mpg-min").val(),$("#mpg-max").val());
-        if(filteredData.length == 0) {
-            //$("hovered").show();
-            d3.select("#hovered").text("No data!!(Modify the range)");
-            $("#plot").hide();
-        }
-        render(filteredData,$("#sel-x option:selected").text(),$("#sel-y option:selected").text());
+var xSelection = $("#sel-x"); 
 
-    });
-    
-    ySelection.on('change',function() {
-        val = $("#sel-y option:selected").text(); 
-        yVal = val;
-        $("#sel-x").children().show();
-        $("#sel-x option[value='"+val+"']").hide();
-        console.log(csvData.length);
-        filteredData = filter(csvData,$("#mpg-min").val(),$("#mpg-max").val());
-        if(filteredData.length == 0) {
-            //$("hovered").show();
-            d3.select("#hovered").text("No data!!(Modify the range)");
-            $("#plot").hide();
-        }
-        render(filteredData,$("#sel-x option:selected").text(),$("#sel-y option:selected").text());
-        //console.log(filteredData.length);
+
+var ySelection = $("#sel-y");
+
+
+xSelection.on('change',function() {
+    val = $("#sel-x option:selected").text(); 
+    xVal = val;
+    $("#sel-y").children().show();
+    $("#sel-y option[value='"+val+"']").hide();
+    update.text("Query "+val.toUpperCase());
+    filteredData = filter(csvData,$("#mpg-min").val(),$("#mpg-max").val());
+    if(filteredData.length == 0) {
+        d3.select("#hovered").text("No data!!(Modify the range)");
+        $("#plot").hide();
+    }
+    render(filteredData,$("#sel-x option:selected").text(),$("#sel-y option:selected").text());
+
+});
+
+ySelection.on('change',function() {
+    val = $("#sel-y option:selected").text(); 
+    yVal = val;
+    $("#sel-x").children().show();
+    $("#sel-x option[value='"+val+"']").hide();
+    filteredData = filter(csvData,$("#mpg-min").val(),$("#mpg-max").val());
+    render(filteredData,$("#sel-x option:selected").text(),$("#sel-y option:selected").text());
 });
    
 var xGroup = canvas.append("g")
@@ -247,7 +162,7 @@ d3.csv("car.csv")
         render(filteredData,$("#sel-x option:selected").text(),$("#sel-y option:selected").text());
     });
 function filter(data,min,max) {
-    var x = 'mpg';
+    var x = $("#sel-x option:selected").text();
     var filteredData = data.filter(function(d) {
             return +d[x] >= min && +d[x] <= max ;
     }); 
@@ -256,6 +171,3 @@ function filter(data,min,max) {
 function render(data,xVal,yVal) {
     renderChart(data,xVal,yVal);
 }
-</script>
-</html>
-
